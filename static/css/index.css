@@ -1,0 +1,64 @@
+/*
+ *
+ * 
+ * */
+.f-main-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+}
+.f-main-center .items {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap:wrap
+}
+.f-main-center .item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow:column;
+    width: 200px;
+    height: 200px;
+    margin: 10px;
+    font-size: 1rem;
+    color: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.f-main-center .item:active {
+    width: 210px;
+    height: 210px;
+}
+.f-main-center .item .glyphicon {
+    margin-bottom: 10px;
+    font-size: 4rem;
+}
+
+.fav-header {
+    padding: 40px 10px;
+    background-color: #ececec;
+}
+.fav-body {
+    margin-top: 30px;
+}
+.fav-lists>li {
+    display: flex;
+    height: auto;
+    min-height: 40px;
+    padding: 5px 10px;
+    border-bottom: dashed 1px #ccc;
+}
+.fav-lists>li:last-child {
+    border-bottom: none;
+}
+.fav-lists>li .fav-info {
+    flex: 1;
+}
+.fav-lists>li .fav-info h2 {
+    line-height: 1;
+    font-size: 1.5rem;
+}
+

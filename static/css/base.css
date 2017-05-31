@@ -1,0 +1,43 @@
+/*
+ *
+ *  
+ * */
+html {
+    font-size: 14px;
+}
+@media only screen and (max-width: 640px) {
+	html {
+        font-size: 12px;
+    }
+}
+@media only screen and (max-width: 480px) {
+    html {
+        font-size: 10px;
+    }
+}
+@media only screen and (max-width: 320px) {
+    html {
+        font-size: 8px;
+    }
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+}
+li {
+    list-style: none;
+}
+
+/*
+ 主题类
+*/
+.theme .f-main-center .item {
+    background-color: #009999;
+    box-shadow: 0 3px 10px rgba(0,153,153,.5);
+}
+
+.theme-1 .f-main-center .item {
+    background-color: #33CC99;
+    box-shadow: 0 3px 10px rgba(51,204,153,.5);
+}
