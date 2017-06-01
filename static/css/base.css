@@ -21,12 +21,23 @@ html {
     }
 }
 
+* {
+    box-sizing: border-box;
+}
+
 ul {
     padding: 0;
     margin: 0;
 }
 li {
     list-style: none;
+}
+
+@media only screen and (max-width: 760px) {
+    .container {
+        padding-right: 0;
+        padding-left: 0;
+    }
 }
 
 /*
@@ -41,3 +52,30 @@ li {
     background-color: #33CC99;
     box-shadow: 0 3px 10px rgba(51,204,153,.5);
 }
+
+.loading-more {
+    padding: 10px;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #777;
+    
+}
+
+.btn-success {
+    background-color: #33CC99;
+    border-color: #33CC99;
+}
+.btn-success:focus {
+    background-color: #33CC99;
+    border-color: #33CC99;
+}
+.btn-success:hover {
+    background-color: #33CC99;
+    border-color: #33CC99;
+}
+.btn-success:active {
+    background-color: #33CC99;
+    border-color: #33CC99;
+}
+
+
