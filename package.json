@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/henjing/Fam/issues"
   },
-  "homepage": "https://github.com/henjing/Fam#readme"
+  "homepage": "https://github.com/henjing/Fam#readme",
+  "dependencies": {
+    "nunjucks": "^3.0.1"
+  }
 }
