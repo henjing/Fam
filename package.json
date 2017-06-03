@@ -1,0 +1,19 @@
+{
+  "name": "fam",
+  "version": "1.0.0",
+  "description": "搜藏夹和账号管理",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/henjing/Fam.git"
+  },
+  "author": "enjing",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/henjing/Fam/issues"
+  },
+  "homepage": "https://github.com/henjing/Fam#readme"
+}
