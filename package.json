@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/henjing/Fam#readme",
   "dependencies": {
-    "nunjucks": "^3.0.1"
+    "mysql": "^2.13.0",
+    "nunjucks": "^3.0.1",
+    "sequelize": "^3.30.4"
   }
 }

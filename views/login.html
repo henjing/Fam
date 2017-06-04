@@ -32,17 +32,17 @@
                 <form class="form-horizontal" id="login">
                     <div class="form-group">
                         <div class="col-xs-12">
-                            <input type="tel" class="form-control" placeholder="输入手机号">
+                            <input type="tel" class="form-control" name="phone" placeholder="输入手机号">
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-xs-12">
-                            <input type="password" class="form-control" placeholder="输入密码">
+                            <input type="password" class="form-control" name="pwd" placeholder="输入密码">
                         </div>
                     </div>
                     <div class="form-group code-bar">
                         <div class="col-xs-8">
-                            <input type="text" class="form-control" placeholder="输入验证码">
+                            <input type="text" class="form-control" name="code" placeholder="输入验证码">
                         </div>
                         <div class="col-xs-4 img-code">
                             <img src="/static/img/qc.png"/>
@@ -64,12 +64,12 @@
                 <form class="form-horizontal" id="register" style="display: none;">
                     <div class="form-group">
                         <div class="col-xs-12">
-                            <input type="tel" class="form-control" placeholder="输入手机号">
+                            <input type="tel" class="form-control" name="phone" placeholder="输入手机号">
                         </div>
                     </div>
                     <div class="form-group code-bar">
                         <div class="col-xs-7">
-                            <input type="text" class="form-control" placeholder="输入验证码">
+                            <input type="text" class="form-control" name="code" placeholder="输入验证码">
                         </div>
                         <div class="col-xs-5 img-code">
                             <button type="button" class="btn btn-block btn-default">获取验证码</button>
@@ -77,12 +77,12 @@
                     </div>
                     <div class="form-group">
                         <div class="col-xs-12">
-                            <input type="password" class="form-control" placeholder="设置登陆密码">
+                            <input type="password" class="form-control" name="pwd" placeholder="设置登陆密码">
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-xs-12">
-                            <input type="password" class="form-control" placeholder="确认登陆密码">
+                            <input type="password" class="form-control" name="confirmpwd" placeholder="确认登陆密码">
                         </div>
                     </div>
                     <div class="form-group">
@@ -110,11 +110,22 @@
                 });
                 
                 $("#signIn").on('click', function () {
-                    location.href = 'index.html'
+                    var data = $("#login").serializeArray();
+                    console.log(data)
+                    $.post('/api/login',data, function (response) {
+                        console.log(response)
+                    }, 'json');
+                    
+//                  location.href = 'index.html'
                 });
                 $("#signUp").on('click', function () {
+                    var data = $("#register").serializeArray();
+                    console.log(data)
+                    $.post('/api/register',data, function (response) {
+                        console.log(response)
+                    }, 'json');
                     $("#login").show();  
-                    $("#register").hide(); 
+                    $("#register").hide();
                 });
             });
         </script>

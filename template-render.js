@@ -1,4 +1,5 @@
 var nunjucks = require('nunjucks');
+var isProduction = process.env.NODE_ENV === 'production';
 
 function createEnv(path, opts) {
     var
@@ -22,13 +23,22 @@ function createEnv(path, opts) {
     return env;
 }
 
-var env = createEnv('views', {
-    watch: true,
-    filters: {
-        hex: function (n) {
-            return '0x' + n.toString(16);
+module.exports = function (response, view, data) {
+    var env = createEnv('views', {
+        watch: true,
+        noCache: isProduction,
+        filters: {
+            hex: function (n) {
+                return '0x' + n.toString(16);
+            }
         }
+    });
+    
+    function render() {
+        response.writeHead(200, {'Content-Type': 'text/html'});
+        response.end(env.render(view, data || {}));
     }
-});
+    
+    return render();
+}
 
-module.exports = env;

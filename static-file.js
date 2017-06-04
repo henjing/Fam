@@ -8,7 +8,6 @@ function staticServer(request, response) {
     // 拼接文件路径
     var pathname = url.parse(request.url).pathname;
 
-    console.log(pathname)
     if (pathname.startsWith('/static')) {
     	var filepath = path.join(root, pathname);
     	// 文件存在则返回文件内容否则返回404
@@ -23,7 +22,6 @@ function staticServer(request, response) {
 	        }
 	    });
     }
-
     
 }
 
