@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,7 +8,8 @@
         <title>FAM登陆</title>
 
         <!-- Bootstrap -->
-        <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!--        <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">-->
+        <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
         <link rel="stylesheet" type="text/css" href="/static/css/base.css"/>
         <link rel="stylesheet" type="text/css" href="/static/css/index.css"/>
 
@@ -32,22 +32,22 @@
                 <form class="form-horizontal" id="login">
                     <div class="form-group">
                         <div class="col-xs-12">
-                            <input type="tel" class="form-control" name="phone" placeholder="输入手机号">
+                            <input type="tel" class="form-control" name="username" placeholder="输入手机号">
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-xs-12">
-                            <input type="password" class="form-control" name="pwd" placeholder="输入密码">
+                            <input type="password" class="form-control" name="password" placeholder="输入密码">
                         </div>
                     </div>
-                    <div class="form-group code-bar">
+                    <!--<div class="form-group code-bar">
                         <div class="col-xs-8">
                             <input type="text" class="form-control" name="code" placeholder="输入验证码">
                         </div>
                         <div class="col-xs-4 img-code">
                             <img src="/static/img/qc.png"/>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="form-group">
                         <div class="col-xs-12">
                             <button type="button" class="btn btn-block btn-success" id="signIn">登陆</button>
@@ -64,20 +64,20 @@
                 <form class="form-horizontal" id="register" style="display: none;">
                     <div class="form-group">
                         <div class="col-xs-12">
-                            <input type="tel" class="form-control" name="phone" placeholder="输入手机号">
+                            <input type="tel" class="form-control" name="username" placeholder="输入手机号">
                         </div>
                     </div>
-                    <div class="form-group code-bar">
+                    <!--<div class="form-group code-bar">
                         <div class="col-xs-7">
                             <input type="text" class="form-control" name="code" placeholder="输入验证码">
                         </div>
                         <div class="col-xs-5 img-code">
                             <button type="button" class="btn btn-block btn-default">获取验证码</button>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="form-group">
                         <div class="col-xs-12">
-                            <input type="password" class="form-control" name="pwd" placeholder="设置登陆密码">
+                            <input type="password" class="form-control" name="password" placeholder="设置登陆密码">
                         </div>
                     </div>
                     <div class="form-group">
@@ -97,7 +97,10 @@
                 <!-- end 注册 -->
             </div>
         </div>
-        <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+        <!--<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>-->
+        <script src="/static/js/jquery-3.1.0.min.js"></script>
+        <script src="/static/js/layer.js"></script>
+        <!--<script src="/static/js/bootstrap.min.js"></script>-->
         <script>
             $(function () {
                 $(".register").on('click', function () {
@@ -114,18 +117,40 @@
                     console.log(data)
                     $.post('/api/login',data, function (response) {
                         console.log(response)
+                        if (response.status === 1) {
+                            location.href = '/index.html'
+                        } else {
+                            layer.open({
+                                content: response.info,
+                                time: 2.5
+                            });
+                        }
                     }, 'json');
                     
-//                  location.href = 'index.html'
                 });
                 $("#signUp").on('click', function () {
                     var data = $("#register").serializeArray();
                     console.log(data)
                     $.post('/api/register',data, function (response) {
-                        console.log(response)
+                        console.log(response);
+                        if (response.status === 0) {
+                            layer.open({
+                                content: response.info,
+                                time: 2.5
+                            });
+                        } else {
+                            layer.open({
+                                content: response.info,
+                                time: 2.5,
+                                end: function () {
+                                    $("#login").show();  
+                                    $("#register").hide();
+                                }
+                            });
+                            
+                        }
                     }, 'json');
-                    $("#login").show();  
-                    $("#register").hide();
+                    
                 });
             });
         </script>

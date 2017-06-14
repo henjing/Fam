@@ -110,16 +110,20 @@
 .fav-body {
     flex: 1;
     margin-top: 20px;
-    overflow: auto;
+}
+.fav-lists {
+    padding-left: 10px;
+    padding-right: 10px;
 }
 .fav-lists>li {
     display: flex;
     height: auto;
     min-height: 40px;
-    padding: 10px;
+    padding: 10px 0;
     border-bottom: dashed 1px #ccc;
     cursor: pointer;
 }
+
 .fav-lists>li:active {
     background-color: #ececec;
 }
@@ -131,12 +135,24 @@
     width: 40px;
     height: 40px;
     margin-right: 10px;
-    line-height: 34px;
+    line-height: 40px;
     text-align: center;
-    border-top: 3px solid #33CC99;
-    border-bottom: 3px solid #33CC99;
-    border-radius: 40px;
+    border-left: 3px solid #33CC99;
     color: #33CC99;
+}
+@media only screen and (max-width: 480px) {
+    .fav-lists {
+        padding-left: 0;
+    }
+    .fav-lists>li {
+        min-height: 40px;
+        align-items: center;
+    }
+    .fav-lists>li .list-number {
+        width: 40px;
+        height: 30px;
+        line-height: 30px;
+    }
 }
 .fav-lists>li .fav-info {
     flex: 1;
@@ -154,12 +170,49 @@
     color: #777;
 }
 .fav-lists>li .glyphicon {
-    margin-left: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
     font-size: 1rem;
 }
-/*.fav-lists>li .glyphicon-pencil {
+.fav-lists>li .glyphicon-trash {
+    margin-right: -10px;
+}
+.fav-lists>li .glyphicon-pencil:hover,
+.fav-lists>li .glyphicon-pencil:active {
     color: #33CC99;
 }
-.fav-lists>li .glyphicon-trash {
+.fav-lists>li .glyphicon-trash:hover,
+.fav-lists>li .glyphicon-trash:active {
     color: #CC3333;
-}*/
+}
+
+.pagination {
+    padding: 10px;
+}
+.pagination>.active>a,
+.pagination>.active>a:focus,
+.pagination>.active>a:hover,
+.pagination>.active>span,
+.pagination>.active>span:focus,
+.pagination>.active>span:hover {
+    background-color: #33CC99;
+    border-color: #33CC99;
+    cursor: pointer;
+}
+.pagination>li>a, .pagination>li>span {
+    color: #33CC99;
+}
+
+.no-result {
+    padding: 20px;
+    font-size: 1.6em;
+    color: #ccc;
+    text-align: center;
+}
+@media (max-width: 768px) {
+    .custom-search-input {
+        display: inline-block !important;
+        width: auto !important;
+    }
+
+}

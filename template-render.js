@@ -23,7 +23,15 @@ function createEnv(path, opts) {
     return env;
 }
 
-module.exports = function (response, view, data) {
+/* *
+ * @param {object} req
+ * @param {object} res
+ * @param {string} view 页面模板，如index.html
+ * @param {object} data 返回给页面模板的数据
+ * 
+ * */
+module.exports = function (req, res) {
+    
     var env = createEnv('views', {
         watch: true,
         noCache: isProduction,
@@ -34,11 +42,11 @@ module.exports = function (response, view, data) {
         }
     });
     
-    function render() {
-        response.writeHead(200, {'Content-Type': 'text/html'});
-        response.end(env.render(view, data || {}));
+    req.render = function render(view, data) {
+        res.writeHead(200, {'Content-Type': 'text/html'});
+        res.end(env.render(view, data || {}));
     }
-    
-    return render();
 }
+
+
 

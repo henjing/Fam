@@ -1,9 +1,9 @@
-var render = require('../template-render.js');
 var url = require('url');
 var querystring = require('querystring');
 var UserModel = require('../models/user-model.js');
+var crypted = require('../crypto/crypto.js');
 
-console.log(render)
+var FAMUSERREGISTERKEY = 'famuserregisterkey';
 
 module.exports = function (request, response) {
 
@@ -12,17 +12,14 @@ module.exports = function (request, response) {
 	// 首页
 	if (path === '/' || path === '/index.html') {
 	    
-	    render(response, 'index.html', {
-	        name1: '收藏夹',
-            name2: '账号管理'
-	    });
+	    request.render('index.html');
 	    
 	}
 	
 	// 登陆页
 	if (path === '/login.html') {
 		
-		render(response, 'login.html');
+		request.render('login.html');
 		
 	}
 	
@@ -35,18 +32,44 @@ module.exports = function (request, response) {
 	    
 	    request.on('end', function () {
 	        let jsonContent = querystring.parse(content);
-	        console.log(jsonContent)
-	       
-	       // 查库检查改用户名是否已经
+	        let checkPhone = /^1[34578]\d{9}$/.test(jsonContent.username);
+	        let checkEmail = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/.test(jsonContent.username);
+	        let checkPwd = /^[\w]{6,15}$/.test(jsonContent.password);
+	        
+	        function resaultFunc(msg) {
+	            response.writeHead(200, {'Content-Type': 'application/json'});
+                response.end(JSON.stringify({
+                    status: 0,
+                    info: msg,
+                }));
+	        }
+	        
+	        // 数据校验
+            if (!checkPhone && !checkEmail) {
+                resaultFunc('用户名格式不正确，必须是手机或者邮箱！')
+                return false;
+            }
+            
+            if (!checkPwd) {
+                resaultFunc('密码格式错误，应为6-15位！');
+                return false;
+            }
+            
+            if (jsonContent.confirmpwd !== jsonContent.password ) {
+                resaultFunc('两次输入的密码不一致！')
+                return false;
+            }
+            
+	        // 查库检查改用户名是否已经
 	        UserModel.findOne({
 	            where: {
-	                username: jsonContent.phone,
+	                username: jsonContent.username,
 	            }
 	        }).then(function (data) {
 	            if (!data) {
 	                UserModel.create({
-                        username: jsonContent.phone,
-                        password: jsonContent.pwd,
+                        username: jsonContent.username,
+                        password: crypted.encrypted(jsonContent.password, FAMUSERREGISTERKEY),
                     }).then(function (p) {
                         console.log(`created.{JSON.stringify(p)}`);
                         response.writeHead(200, {'Content-Type': 'application/json'});
@@ -85,21 +108,29 @@ module.exports = function (request, response) {
             // 根据用户名查数据库
             UserModel.findOne({
                 where: {
-                    username: jsonContent.phone
+                    username: jsonContent.username
                 }
             }).then(function (data) {
-                console.log(data)
-                if (data && data.password === jsonContent.pwd) {
+//              console.log(data)
+                // 加密
+                let password = crypted.encrypted(jsonContent.password, FAMUSERREGISTERKEY);
+                if (data && data.password === password) {
+                    // 保存session
+                    request.session.put('userinfo', {
+                        uid: data.uid,
+                        username: data.username,
+                        regtime: new Date(data.regtime).toLocaleString(),
+                    });
+                    
+                    console.log(request.session)
+                    
                     response.writeHead(200, {'Content-Type': 'application/json'});
                     response.end(JSON.stringify({
                         status: 1,
                         info: '登陆成功！',
-                        userInfo: {
-                            uid: data.uid,
-                            phone: data.username,
-                        }
+                        userInfo: request.session.get('userinfo')
                     }));
-                } else if (data && data.password !== jsonContent.pwd) {
+                } else if (data && data.password !== password) {
                     response.writeHead(200, {'Content-Type': 'application/json'});
                     response.end(JSON.stringify({
                         status: 0,
@@ -116,34 +147,16 @@ module.exports = function (request, response) {
                 }
             }).catch(function (err) {
                 console.log(err)
+                response.writeHead(200, {'Content-Type': 'application/json'});
+                response.end(JSON.stringify({
+                    status: 0,
+                    info: err,
+                    
+                }));
             });
            
         });
         
     }
 	
-	// 搜藏夹
-	if (path === '/favorite.html') {
-	    
-	    render(response, 'favorite.html', {
-	        lists: [
-                {
-                    id: 1,
-                    title: '我是标题',
-                    decr: '这里是描述，这里真的是描述。'
-                },
-                {
-                    id: 2,
-                    title: '我是标题1',
-                    decr: '这里是描述，这里真的是描述1。'
-                },
-                {
-                    id: 3,
-                    title: '我是标题2',
-                    decr: '这里是描述，这里真的是描述2。'
-                }
-            ]
-	    });
-		
-	}
-}
+};
