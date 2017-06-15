@@ -121,6 +121,7 @@
                             location.href = '/index.html'
                         } else {
                             layer.open({
+                                style: 'max-width: 300px',
                                 content: response.info,
                                 time: 2.5
                             });
@@ -128,6 +129,13 @@
                     }, 'json');
                     
                 });
+                // 回车登陆
+                $(document).on('keypress', function (e) {
+                    if (e.keyCode === 13) {
+                        $("#signIn").click();
+                    }
+                });
+                
                 $("#signUp").on('click', function () {
                     var data = $("#register").serializeArray();
                     console.log(data)
@@ -135,11 +143,13 @@
                         console.log(response);
                         if (response.status === 0) {
                             layer.open({
+                                style: 'max-width: 300px',
                                 content: response.info,
                                 time: 2.5
                             });
                         } else {
                             layer.open({
+                                style: 'max-width: 300px',
                                 content: response.info,
                                 time: 2.5,
                                 end: function () {

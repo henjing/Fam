@@ -89,8 +89,8 @@
 
 
 .fav-flex-box {
-    display: flex;
-    flex-flow: column;
+    /*display: flex;*/
+    /*flex-flow: column;*/
     height: 100vh;
 }
 .f-main-center .item .glyphicon {

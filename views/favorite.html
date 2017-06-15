@@ -26,10 +26,7 @@
         <div class="container theme-1 fav-flex-box">
             <header class="fav-header">
                 <form class="form-inline">
-                    <div class="form-group">
-                        <label for="inputPassword2" class="sr-only">Password</label>
-                        <input type="text" class="form-control custom-search-input" name="search" placeholder="输入关键词" value="{{search}}">
-                    </div>
+                    <input type="text" class="form-control custom-search-input" name="search" placeholder="输入关键词">
                     <button type="submit" class="btn btn-success">
                         <span class="glyphicon glyphicon-search"></span>
                     </button>
@@ -45,7 +42,13 @@
                     <ul class="fav-lists">
                     	{% for item in lists %}
                         <li>
-                            <div class="list-number">{{ limit * (currentPage - 1) + loop.index }}</div>
+                            <div class="list-number">
+                                {% if currentPage %}
+                                    {{ limit * (currentPage - 1) + loop.index }}
+                                {% else %}
+                                    {{ loop.index }}
+                                {% endif %}
+                            </div>
                             <div class="fav-info" onclick="window.open('{{ item.link }}')">
                                 <h2>{{ item.title }}</h2>
                                 <p>{{ item.intro }}</p>
