@@ -1,0 +1,218 @@
+/*
+ *
+ * 
+ * */
+.login-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: auto;
+    /*background: #27273e;*/
+    background-color: rgb(70,76,91);
+}
+.login {
+    padding: 20px;
+    width: 300px;
+    /*background-color: rgba(51,204,153,.1);*/
+    background-color: #fff;
+    border: 2px solid #33CC99;
+    border-radius: 6px;
+}
+@media (max-width: 768px) {
+    .code-bar [class^=col-sm-] {
+        float: left;
+    }
+}
+.login-header {
+    margin-bottom: 15px;
+    text-align: center;
+}
+.login-header span {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    line-height: 50px;
+    font-size: 1.2rem;
+    text-align: center;
+    color: #33CC99;
+    font-weight: 600;
+    border-radius: 40px;
+    border-top: 5px solid #33CC99;
+    border-bottom: 5px solid #33CC99;
+}
+
+.img-code {
+    padding-left: 0;
+    padding-right: 15px;
+}
+.img-code img {
+    width: 100%;
+    height: 34px;
+    cursor: pointer;
+}
+.login-bottom-nav a {
+    font-size: 0.8rem;
+}
+
+
+.f-main-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+}
+.f-main-center .items {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap:wrap
+}
+.f-main-center .item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow:column;
+    width: 200px;
+    height: 200px;
+    margin: 10px;
+    font-size: 1rem;
+    color: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.f-main-center .item:active {
+    width: 210px;
+    height: 210px;
+}
+
+
+.fav-flex-box {
+    /*display: flex;*/
+    /*flex-flow: column;*/
+    height: 100vh;
+}
+.f-main-center .item .glyphicon {
+    margin-bottom: 10px;
+    font-size: 4rem;
+}
+
+.fav-header {
+    padding: 40px 10px;
+    background-color: #ececec;
+}
+@media only screen and (max-width: 769px) {
+	.fav-header {
+	    padding: 10px;
+	}
+}
+.fav-body {
+    flex: 1;
+    margin-top: 20px;
+}
+.fav-lists {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.fav-lists>li {
+    display: flex;
+    height: auto;
+    min-height: 40px;
+    padding: 10px 0;
+    border-bottom: dashed 1px #ccc;
+    cursor: pointer;
+}
+
+.fav-lists>li:active {
+    background-color: #ececec;
+}
+.fav-lists>li:last-child {
+    border-bottom: none;
+}
+.fav-lists>li .list-number {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    line-height: 40px;
+    text-align: center;
+    border-left: 3px solid #33CC99;
+    color: #33CC99;
+}
+@media only screen and (max-width: 480px) {
+    .fav-lists {
+        padding-left: 0;
+    }
+    .fav-lists>li {
+        min-height: 40px;
+        align-items: center;
+    }
+    .fav-lists>li .list-number {
+        width: 40px;
+        height: 30px;
+        line-height: 30px;
+    }
+}
+.fav-lists>li .fav-info {
+    flex: 1;
+}
+.fav-lists>li .fav-info h2 {
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 1.5;
+    font-size: 1.2rem;
+}
+.fav-lists>li .fav-info p {
+    margin-bottom: 0;
+    line-height: 1.4;
+    font-size: 0.8rem;
+    color: #777;
+}
+.fav-lists>li .glyphicon {
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 1rem;
+}
+.fav-lists>li .glyphicon-trash {
+    margin-right: -10px;
+}
+.fav-lists>li .glyphicon-pencil:hover,
+.fav-lists>li .glyphicon-pencil:active {
+    color: #33CC99;
+}
+.fav-lists>li .glyphicon-trash:hover,
+.fav-lists>li .glyphicon-trash:active {
+    color: #CC3333;
+}
+
+.pagination {
+    padding: 10px;
+}
+.pagination>.active>a,
+.pagination>.active>a:focus,
+.pagination>.active>a:hover,
+.pagination>.active>span,
+.pagination>.active>span:focus,
+.pagination>.active>span:hover {
+    background-color: #33CC99;
+    border-color: #33CC99;
+    cursor: pointer;
+}
+.pagination>li>a, .pagination>li>span {
+    color: #33CC99;
+}
+
+.no-result {
+    padding: 20px;
+    font-size: 1.6em;
+    color: #ccc;
+    text-align: center;
+}
+@media (max-width: 768px) {
+    .custom-search-input {
+        display: inline-block !important;
+        width: auto !important;
+    }
+
+}
