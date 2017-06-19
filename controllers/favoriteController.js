@@ -31,7 +31,7 @@ module.exports = function (request, response) {
         // 获取当前页
         let currentPage = searchItem.page ? Number(searchItem.page) : 1;
         // 定义每页条数
-        const limit = 10;
+        const limit = 12;
         // 定位当前页
         const dirPage = (currentPage - 1) * limit;
         

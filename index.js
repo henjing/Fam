@@ -15,7 +15,10 @@ var session = new NodeSession({
     'lifetime': 20 * 60 * 1000,
 });
 
+//console.log(http)
+
 var server = http.createServer(function (request, response) {
+    console.log('hello')
 	session.startSession(request, response, function() {
 	    // 静态文件服务器
 	    staticFiles(request, response);
@@ -36,7 +39,10 @@ var server = http.createServer(function (request, response) {
 	
 });
 
-server.listen(8080);
+server.listen(80,function () {
+    console.log('Server is running at http://localhost:80/')
+});
 
-console.log('Server is running at http://localhost:8080/')
+
+
 
