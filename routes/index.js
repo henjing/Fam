@@ -1,9 +1,20 @@
-var express = require('express');
-var router = express.Router();
+const Index = require('../controllers/indexController');
+const Users = require('../controllers/userController');
+const Favorite = require('../controllers/favoriteController');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Fam' });
-});
+const router = (app) => {
+    app.get('/', Index.index);
+    app.get('/index.html', Index.index);
+    
+    app.get('/login.html', Users.index);
+    app.post('/api/login', Users.login);
+    app.post('/api/register', Users.register);
+    
+    app.get('/favorite.html', Favorite.index);
+    app.post('/api/favorite/add', Favorite.add);
+    app.post('/api/favorite/edit', Favorite.edit);
+    app.post('/api/favorite/delete', Favorite.delete);
+}
 
 module.exports = router;
+
