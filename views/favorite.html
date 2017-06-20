@@ -1,265 +1,205 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
+{% extends "base.html" %}
 
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-        <title>Fam收藏夹</title>
+{% block title %}
+<title>收藏夹</title>
+{% endblock %}
 
-        <!-- Bootstrap -->
-<!--        <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">-->
-        <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css"/>
-        <link rel="stylesheet" type="text/css" href="/css/base.css"/>
-        <link rel="stylesheet" type="text/css" href="/css/index.css"/>
-
-        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-        <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-        <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    </head>
-
-    <body>
-        <div class="container theme-1 fav-flex-box">
-            <header class="fav-header">
-                <form class="form-inline">
-                    <input type="text" class="form-control custom-search-input" name="search" placeholder="输入关键词">
-                    <button type="submit" class="btn btn-success">
-                        <span class="glyphicon glyphicon-search"></span>
-                    </button>
-                    
-                    <button type="button" class="btn btn-success" style="float: right;" data-toggle="modal" data-target="#myModal">
-                        <span class="glyphicon glyphicon-plus"></span>
-                    </button>
-                </form>
-            </header>
+{% block body %}
+<div class="container theme-1 fav-flex-box">
+    <header class="fav-header">
+        <form class="form-inline">
+            <input type="text" class="form-control custom-search-input" name="search" placeholder="输入关键词">
+            <button type="submit" class="btn btn-success">
+                <span class="glyphicon glyphicon-search"></span>
+            </button>
             
-            <div class="fav-body">
-                {% if lists.length != 0 %}
-                    <ul class="fav-lists">
-                    	{% for item in lists %}
-                        <li>
-                            <div class="list-number">
-                                {% if currentPage %}
-                                    {{ limit * (currentPage - 1) + loop.index }}
-                                {% else %}
-                                    {{ loop.index }}
-                                {% endif %}
-                            </div>
-                            <div class="fav-info" onclick="window.open('{{ item.link }}')">
-                                <h2>{{ item.title }}</h2>
-                                <p>{{ item.intro }}</p>
-                            </div>
-                            <span class="glyphicon glyphicon-pencil edit" item-title="{{item.title}}" item-link="{{item.link}}" item-id="{{item.id}}" item-intro="{{item.intro}}" data-toggle="modal" data-target="#editDialog"></span>
-                            <span class="glyphicon glyphicon-trash delete" item-id="{{item.id}}"></span>
+            <button type="button" class="btn btn-success" style="float: right;" data-toggle="modal" data-target="#myModal">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+        </form>
+    </header>
+    
+    <div class="fav-body">
+        {% if lists.length != 0 %}
+            <ul class="fav-lists">
+                {% for item in lists %}
+                <li>
+                    <div class="list-number">
+                        {% if currentPage %}
+                            {{ limit * (currentPage - 1) + loop.index }}
+                        {% else %}
+                            {{ loop.index }}
+                        {% endif %}
+                    </div>
+                    <div class="fav-info" onclick="window.open('{{ item.link }}')">
+                        <h2>{{ item.title }}</h2>
+                        <p>{{ item.intro }}</p>
+                    </div>
+                    <span class="glyphicon glyphicon-pencil edit" item-title="{{item.title}}" item-link="{{item.link}}" item-id="{{item.id}}" item-intro="{{item.intro}}" data-toggle="modal" data-target="#editDialog"></span>
+                    <span class="glyphicon glyphicon-trash delete" item-id="{{item.id}}"></span>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p class="no-result">没有数据！</p>
+        {% endif %}
+        <!--分页-->
+        <nav aria-label="Page navigation" style="text-align: center;">
+            {% if totalPage > 1 %}
+                <ul class="pagination">
+                    <li {% if currentPage == 1 %}class="disabled"{% endif %}>
+                        {% if currentPage == 1 %}
+                            <span>
+                                <span aria-hidden="true">&laquo;</span>
+                            </span>
+                        {% else %}
+                            <a href="/favorite.html?page={{currentPage - 1}}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        {% endif %}
+                    </li>
+                    {% for page in pages %}
+                        <li {% if currentPage == page %}class="active"{% endif %}>
+                            <a href="/favorite.html?page={{page}}">{{page}}</a>
                         </li>
                     {% endfor %}
-                    </ul>
-                {% else %}
-                    <p class="no-result">没有数据！</p>
-                {% endif %}
-                <!--分页-->
-                <nav aria-label="Page navigation" style="text-align: center;">
-                    {% if totalPage > 1 %}
-                        <ul class="pagination">
-                            <li {% if currentPage == 1 %}class="disabled"{% endif %}>
-                                {% if currentPage == 1 %}
-                                    <span>
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </span>
-                                {% else %}
-                                    <a href="/favorite.html?page={{currentPage - 1}}" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                {% endif %}
-                            </li>
-                            {% for page in pages %}
-                                <li {% if currentPage == page %}class="active"{% endif %}>
-                                    <a href="/favorite.html?page={{page}}">{{page}}</a>
-                                </li>
-                            {% endfor %}
-                            <li {% if currentPage == totalPage %}class="disabled"{% endif %}>
-                                {% if currentPage == totalPage %}
-                                    <span><span aria-hidden="true">&raquo;</span></span>
-                                {% else %}
-                                    <a href="/favorite.html?page={{currentPage + 1}}" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                {% endif %}
-                            </li>
-                        </ul>
-                    {% endif %}
-                </nav>
+                    <li {% if currentPage == totalPage %}class="disabled"{% endif %}>
+                        {% if currentPage == totalPage %}
+                            <span><span aria-hidden="true">&raquo;</span></span>
+                        {% else %}
+                            <a href="/favorite.html?page={{currentPage + 1}}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        {% endif %}
+                    </li>
+                </ul>
+            {% endif %}
+        </nav>
+    </div>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">添加搜藏</h4>
             </div>
-        </div>
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">添加搜藏</h4>
+            <div class="modal-body">
+                <form class="form-horizontal" id="formData">
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">标题</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="title" placeholder="输入标题">
+                        </div>
                     </div>
-                    <div class="modal-body">
-                        <form class="form-horizontal" id="formData">
-                            <div class="form-group">
-                                <label for="inputEmail3" class="col-sm-2 control-label">标题</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" name="title" placeholder="输入标题">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="inputEmail3" class="col-sm-2 control-label">链接</label>
-                                <div class="col-sm-9">
-                                    <input type="url" class="form-control" name="link" placeholder="输入链接">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="inputPassword3" class="col-sm-2 control-label">描述</label>
-                                <div class="col-sm-9">
-                                    <textarea class="form-control" name="intro" placeholder="输入描述"></textarea>
-                                </div>
-                            </div>
-                            
-                        </form>
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">链接</label>
+                        <div class="col-sm-9">
+                            <input type="url" class="form-control" name="link" placeholder="输入链接">
+                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-success" id="submitData">保存</button>
+                    <div class="form-group">
+                        <label for="inputPassword3" class="col-sm-2 control-label">描述</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control" name="intro" placeholder="输入描述"></textarea>
+                        </div>
                     </div>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
-        
-        <!--修改-->
-        <div class="modal fade" id="editDialog" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">编辑收藏</h4>
+                    
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-success" id="submitData">保存</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!--修改-->
+<div class="modal fade" id="editDialog" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">编辑收藏</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="editFormData">
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">标题</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="title" placeholder="输入标题">
+                        </div>
                     </div>
-                    <div class="modal-body">
-                        <form class="form-horizontal" id="editFormData">
-                            <div class="form-group">
-                                <label for="inputEmail3" class="col-sm-2 control-label">标题</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" name="title" placeholder="输入标题">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="inputEmail3" class="col-sm-2 control-label">链接</label>
-                                <div class="col-sm-9">
-                                    <input type="url" class="form-control" name="link" placeholder="输入链接">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="inputPassword3" class="col-sm-2 control-label">描述</label>
-                                <div class="col-sm-9">
-                                    <textarea class="form-control" name="intro" placeholder="输入描述"></textarea>
-                                </div>
-                            </div>
-                            <input type="hidden" name="id" value="" />
-                            
-                        </form>
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">链接</label>
+                        <div class="col-sm-9">
+                            <input type="url" class="form-control" name="link" placeholder="输入链接">
+                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-success" id="submitEdit">保存</button>
+                    <div class="form-group">
+                        <label for="inputPassword3" class="col-sm-2 control-label">描述</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control" name="intro" placeholder="输入描述"></textarea>
+                        </div>
                     </div>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
-        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <!--<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>-->
-        <script src="/js/jquery-3.1.0.min.js"></script>
-        <script src="/js/bootstrap.min.js"></script>
-        <script src="/js/layer.js"></script>
-        <!-- Include all compiled plugins (below), or include individual files as needed -->
-        <!--<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>-->
-        <script>
-            $('#myModal').modal({show: false});
-            $("#editDialog").modal({show: false});
-            
-            $(function () {
-                $("#submitData").on('click', function() {
-                    var data = $("#formData").serializeArray();
-                    $.post('/api/favorite/add', data, function (res) {
-                        console.log(res)
-                        if (res.status === 1) {
-                            $('#myModal').modal('hide');
-                            window.location.reload();
-                        } else if (res.status === 2) {
-                            layer.open({
-                                style: 'max-width: 300px',
-                                content: res.info,
-                                time: 2.5,
-                                end: function () {
-                                    location.href = "/login.html";
-                                }
-                            });
-                        } else {
-                            layer.open({
-                                style: 'max-width: 300px',
-                                content: res.info,
-                                time: 2.5,
-                            });
-                        }
-                       
-                    }, 'json');
-                });
-                
-                $(".delete").on('click', function (e) {
-                    e.stopPropagation();
-                    var $this = $(this);
+                    <input type="hidden" name="id" value="" />
+                    
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-success" id="submitEdit">保存</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+{% endblock %}
+
+{% block selfjs %}
+<script>
+    $('#myModal').modal({show: false});
+    $("#editDialog").modal({show: false});
+    
+    $(function () {
+        $("#submitData").on('click', function() {
+            var data = $("#formData").serializeArray();
+            $.post('/api/favorite/add', data, function (res) {
+                console.log(res)
+                if (res.status === 1) {
+                    $('#myModal').modal('hide');
+                    window.location.reload();
+                } else if (res.status === 2) {
                     layer.open({
                         style: 'max-width: 300px',
-                        content: '确定要删除吗？',
-                        btn: ['确定','取消'],
-                        no: function () { layer.closeAll() },
-                        yes: function () {
-                            $.post('/api/favorite/delete',{id: $this.attr('item-id')}, function (res) {
-                                layer.open({
-                                    style: 'max-width: 300px',
-                                    content: res.info,
-                                    time: 2.5,
-                                });
-                                if (res.status ===  1) {
-                                    location.reload();
-                                } else if (res.status === 2) {
-                                    layer.open({
-                                        style: 'max-width: 300px',
-                                        content: res.info,
-                                        time: 2.5,
-                                        end: function () {
-                                            location.href = "/login.html";
-                                        }
-                                    });
-                                }
-                            }, 'json');
+                        content: res.info,
+                        time: 2.5,
+                        end: function () {
+                            location.href = "/login.html";
                         }
                     });
-                    
-                });
-                
-                $('#editDialog').on('show.bs.modal', function (e) {
-                    var title = $(e.relatedTarget).attr('item-title'),
-                        link = $(e.relatedTarget).attr('item-link'),
-                        intro = $(e.relatedTarget).attr('item-intro');
-                        id = $(e.relatedTarget).attr('item-id');
-                    
-                    $(this).find('[name=title]').val(title);
-                    $(this).find('[name=link]').val(link);
-                    $(this).find('[name=intro]').val(intro);
-                    $(this).find('[name=id]').val(id);
-                });
-                
-                $("#submitEdit").on('click', function (e) {
-                    e.stopPropagation();
-                    var editFormData = $("#editFormData").serializeArray();
-                    $.post('/api/favorite/edit',editFormData, function (res) {
+                } else {
+                    layer.open({
+                        style: 'max-width: 300px',
+                        content: res.info,
+                        time: 2.5,
+                    });
+                }
+               
+            }, 'json');
+        });
+        
+        $(".delete").on('click', function (e) {
+            e.stopPropagation();
+            var $this = $(this);
+            layer.open({
+                style: 'max-width: 300px',
+                content: '确定要删除吗？',
+                btn: ['确定','取消'],
+                no: function () { layer.closeAll() },
+                yes: function () {
+                    $.post('/api/favorite/delete',{id: $this.attr('item-id')}, function (res) {
                         layer.open({
                             style: 'max-width: 300px',
                             content: res.info,
@@ -278,8 +218,46 @@
                             });
                         }
                     }, 'json');
-                });
+                }
             });
-        </script>
-    </body>
-</html>
+            
+        });
+        
+        $('#editDialog').on('show.bs.modal', function (e) {
+            var title = $(e.relatedTarget).attr('item-title'),
+                link = $(e.relatedTarget).attr('item-link'),
+                intro = $(e.relatedTarget).attr('item-intro');
+                id = $(e.relatedTarget).attr('item-id');
+            
+            $(this).find('[name=title]').val(title);
+            $(this).find('[name=link]').val(link);
+            $(this).find('[name=intro]').val(intro);
+            $(this).find('[name=id]').val(id);
+        });
+        
+        $("#submitEdit").on('click', function (e) {
+            e.stopPropagation();
+            var editFormData = $("#editFormData").serializeArray();
+            $.post('/api/favorite/edit',editFormData, function (res) {
+                layer.open({
+                    style: 'max-width: 300px',
+                    content: res.info,
+                    time: 2.5,
+                });
+                if (res.status ===  1) {
+                    location.reload();
+                } else if (res.status === 2) {
+                    layer.open({
+                        style: 'max-width: 300px',
+                        content: res.info,
+                        time: 2.5,
+                        end: function () {
+                            location.href = "/login.html";
+                        }
+                    });
+                }
+            }, 'json');
+        });
+    });
+</script>
+{% endblock %}
