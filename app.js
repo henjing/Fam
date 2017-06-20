@@ -1,14 +1,13 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var nunjucks = require('nunjucks');
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const nunjucks = require('nunjucks');
 const cookieSession = require('cookie-session');
 
 const routes = require('./routes/index');
-//const connection = require('./connection');
 
 const app = express();
 
@@ -26,9 +25,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: false
 }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
+if (process.env.NODE_ENV !== 'production') {
+    app.use(express.static(path.join(__dirname, 'public')));
+}
+
+app.use(cookieParser());
 app.use(cookieSession({
     name: 'session',
     keys: ['famfamenjing'],
