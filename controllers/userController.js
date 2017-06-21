@@ -14,6 +14,7 @@ exports.login = (req, res, next) => {
     // 加密
     const password = crypted.encrypted(data.password, FAM_USER_KEY);
     connection.query(`SELECT * FROM users WHERE username="${data.username}"`, (err, results) => {
+        console.log(results)
         const result = results[0];
         if (err) {
             console.log(err);
@@ -22,7 +23,7 @@ exports.login = (req, res, next) => {
                 info: err.message
             })
             return false;
-        } 
+        }
         
         if (result && result.password === password) {
             // 保存用户信息到session

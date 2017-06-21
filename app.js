@@ -9,12 +9,15 @@ const cookieSession = require('cookie-session');
 
 const routes = require('./routes/index');
 
+let isProduction = process.env.NODE_ENV === 'production';
+
 const app = express();
 
 // view engine setup
 nunjucks.configure(path.join(__dirname, 'views'), {
     autoescape: true,
     express: app,
+    noCache: false
 });
 app.set('view engine', 'html');
 
@@ -26,15 +29,17 @@ app.use(bodyParser.urlencoded({
     extended: false
 }));
 
-if (process.env.NODE_ENV !== 'production') {
-    app.use(express.static(path.join(__dirname, 'public')));
+
+if (isProduction === false) {
+    console.log('当前处于开发环境')
+    app.use('/public', express.static(path.join(__dirname, 'public')));
 }
 
 app.use(cookieParser());
 app.use(cookieSession({
     name: 'session',
     keys: ['famfamenjing'],
-    maxAge: 5 * 60 * 1000
+    maxAge: 30 * 60 * 1000
 }));
 
 routes(app);
