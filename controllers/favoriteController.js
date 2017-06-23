@@ -18,6 +18,7 @@ exports.index = (req, res, nex) => {
     // 定位当前页
     const dirPage = (currentPage - 1) * limit;
     
+    
     /*
      * 分页查询方法
      */
@@ -71,9 +72,24 @@ exports.index = (req, res, nex) => {
                 lists: result,
             });
         });
+    } else if (req.query.category) {
+        const getSortSql = `SELECT * FROM favorites WHERE uid=${uid} AND category_id=${req.query.category}`;
+        connection.query(getSortSql, (err, result, fields) => {
+            if (err) {
+                res.send({
+                    status: 0,
+                    info: err.message
+                });
+            }
+            
+            res.render('favorite.html', {
+                lists: result,
+            });
+        });
     } else {
         queryLimitData();
     }
+    
      
 };
 
@@ -91,6 +107,7 @@ exports.add = (req, res, next) => {
     const uid = req.session.userInfo.uid;
     
     const data = req.body;
+//  const time = new Date().getTime();
     
     if (data.title.trim() === '') {
         res.send({
@@ -100,7 +117,7 @@ exports.add = (req, res, next) => {
         return false;
     }
     
-    const createSQL = `INSERT INTO favorites VALUES(0,${uid},"${data.title}","${data.link}","${data.intro}",now(),now())`;
+    const createSQL = `INSERT INTO favorites VALUES(0,${uid},"${data.title}","${data.link}","${data.intro}",${data.sort},now(),now())`;
     connection.query(createSQL, function (err, result) {
         if (err) {
             res.send({
@@ -127,8 +144,8 @@ exports.edit = (req, res, next) => {
         return false;
     };
     const data = req.body;
-    const queryChangeSql = `SELECT title, link, intro FROM favorites WHERE id=${data.id}`;
-    const updateSQL = `UPDATE favorites SET title="${data.title}",link="${data.link}",intro="${data.intro}",updatetime=now() WHERE id=${data.id}`;
+    const queryChangeSql = `SELECT title, link, intro, category_id FROM favorites WHERE id=${data.id}`;
+    const updateSQL = `UPDATE favorites SET title="${data.title}",link="${data.link}",intro="${data.intro}",category_id=${data.sort},updatetime=now() WHERE id=${data.id}`;
     connection.query(queryChangeSql, (err, results) => {
         console.log(results)
         const result = results[0];
@@ -138,7 +155,7 @@ exports.edit = (req, res, next) => {
                 info: err.message
             });
         }
-        if (data.title === result.title && data.link === result.link && data.intro === result.intro) {
+        if (data.title === result.title && data.link === result.link && data.intro === result.intro && data.sort === result.category_id) {
             res.send({
                 status: 0,
                 info: '没有做任何改变！'
@@ -191,3 +208,103 @@ exports.delete = (req, res, next) => {
        })
     });
 };
+
+// 获取分类数据
+exports.getCategory = (req, res, next) => {
+    // 接口验证登录是否有效
+    if (!req.session.userInfo) {
+        res.send({
+            status: 2,
+            info: '登录过期，请重新登录！'
+        });
+        return false;
+    };
+    const uid = req.session.userInfo.uid;
+    const getDataSql = `SELECT id,title FROM fav_category WHERE uid=${uid}`;
+    connection.query(getDataSql,(err, result) => {
+        if (err) {
+           res.send({
+               status: 0,
+               info: err.message
+           });
+        }
+        
+        res.send({
+            status: 1,
+            info: '获取成功！',
+            data: result
+        })
+    });
+};
+
+// 添加分类
+exports.addCategory = (req, res, next) => {
+    // 接口验证登录是否有效
+    if (!req.session.userInfo) {
+        res.send({
+            status: 2,
+            info: '登录过期，请重新登录！'
+        });
+        return false;
+    };
+    
+    const data = req.body;
+    if (!data.title) {
+        res.send({
+            status: 0,
+            info: '分类名不能为空',
+        });
+        return false;
+    }
+    const uid = req.session.userInfo.uid;
+    const time = new Date().getTime();
+    const createCategorySql = `INSERT INTO fav_category VALUES(0,${uid},"${data.title}",${time},${time})`;
+    connection.query(createCategorySql,(err, result) => {
+        if (err) {
+           res.send({
+               status: 0,
+               info: err.message
+           });
+        }
+        
+        res.send({
+            status: 1,
+            info: '添加成功！',
+        });
+    });
+}
+
+// 删除分类
+exports.deleteCategory = (req, res, next) => {
+    // 接口验证登录是否有效
+    if (!req.session.userInfo) {
+        res.send({
+            status: 2,
+            info: '登录过期，请重新登录！'
+        });
+        return false;
+    };
+    
+    const data = req.body;
+    if (!data.id) {
+        res.send({
+            status: 0,
+            info: '请选择分类',
+        });
+        return false;
+    }
+    const deleteCategorySql = `DELETE FROM fav_category WHERE id=${data.id}`;
+    connection.query(deleteCategorySql,(err, result) => {
+        if (err) {
+           res.send({
+               status: 0,
+               info: err.message
+           });
+        }
+        
+        res.send({
+            status: 1,
+            info: '删除成功！',
+        });
+    });
+}

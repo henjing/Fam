@@ -14,6 +14,9 @@ const router = (app) => {
     app.post('/api/favorite/add', Favorite.add);
     app.post('/api/favorite/edit', Favorite.edit);
     app.post('/api/favorite/delete', Favorite.delete);
+    app.get('/api/favorite/category', Favorite.getCategory);
+    app.post('/api/favorite/category/add', Favorite.addCategory);
+    app.post('/api/favorite/category/delete', Favorite.deleteCategory);
 }
 
 module.exports = router;

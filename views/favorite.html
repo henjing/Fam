@@ -13,10 +13,17 @@
                 <span class="glyphicon glyphicon-search"></span>
             </button>
             
-            <button type="button" class="btn btn-success" style="float: right;" data-toggle="modal" data-target="#myModal">
-                <span class="glyphicon glyphicon-plus"></span>
+            <button type="button" class="btn btn-success" style="float: right;margin-left: 10px;" data-toggle="modal" data-target="#myModal">
+                <span class="glyphicon glyphicon-plus"></span>添加收藏
+            </button>
+            <button type="button" class="btn btn-success" style="float: right;" data-toggle="modal" data-target="#sortDialog">
+                <span class="glyphicon glyphicon-plus"></span>分类管理
             </button>
         </form>
+        <label style="font-size: 14px;color: #777;margin-right: 5px;">按分类显示</label>
+        <select class="category" id="getSortData" style="width: 137px;height: 30px;margin-top: 10px;border-color: #ccc;">
+            <option value="">全部</option>
+        </select>
     </header>
     
     <div class="fav-body">
@@ -35,7 +42,7 @@
                         <h2>{{ item.title }}</h2>
                         <p>{{ item.intro }}</p>
                     </div>
-                    <span class="glyphicon glyphicon-pencil edit" item-title="{{item.title}}" item-link="{{item.link}}" item-id="{{item.id}}" item-intro="{{item.intro}}" data-toggle="modal" data-target="#editDialog"></span>
+                    <span class="glyphicon glyphicon-pencil edit" item-title="{{item.title}}" item-link="{{item.link}}" item-id="{{item.id}}" item-intro="{{item.intro}}" item-cgyid="{{item.category_id}}" data-toggle="modal" data-target="#editDialog"></span>
                     <span class="glyphicon glyphicon-trash delete" item-id="{{item.id}}"></span>
                 </li>
             {% endfor %}
@@ -87,6 +94,14 @@
             <div class="modal-body">
                 <form class="form-horizontal" id="formData">
                     <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">链接</label>
+                        <div class="col-sm-9">
+                            <select class="category" name="sort" style="width: 100%;height: 34px;margin-top: 10px;border-color: #ccc;">
+                                <option value="">选择分类</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="inputEmail3" class="col-sm-2 control-label">标题</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" name="title" placeholder="输入标题">
@@ -126,6 +141,14 @@
             <div class="modal-body">
                 <form class="form-horizontal" id="editFormData">
                     <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">链接</label>
+                        <div class="col-sm-9">
+                            <select class="edit-category" name="sort" style="width: 100%;height: 34px;margin-top: 10px;border-color: #ccc;">
+                                <option value="0">未选择分类</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="inputEmail3" class="col-sm-2 control-label">标题</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" name="title" placeholder="输入标题">
@@ -155,18 +178,78 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<!--分类管理-->
+<div class="modal fade" id="sortDialog" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">分类管理</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <label style="font-size: 14px;color: #777;margin-right: 5px;">新增分类</label>
+                    <input type="text" name="" class="add-category" value="" style="width: 200px;height: 30px;margin-top: 10px;border: 1px solid #ccc;border-radius: 5px;" />
+                    <button id="addCategory" style="height: 30px;border-radius: 5px;border: 1px solid #ccc;background: none;">新增</button>
+                </div>
+                <div>
+                    <label style="font-size: 14px;color: #777;margin-right: 5px;">删除分类</label>
+                    <select class="category delete-category" style="width: 200px;height: 30px;margin-top: 10px;border-color: #ccc;">
+                        <option value="">选择分类</option>
+                    </select>
+                    <button id="deleteCategory" style="height: 30px;border-radius: 5px;border: 1px solid #ccc;background: none;">删除</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!--<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-success" id="submitEdit">保存</button>-->
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 {% endblock %}
 
 {% block selfjs %}
 <script>
     $('#myModal').modal({show: false});
     $("#editDialog").modal({show: false});
+    $("#sortMenage").modal({show: false});
     
     $(function () {
+        // 获取分类数据
+        $.get('/api/favorite/category', function (res) {
+            console.log(res)
+            $.each(res.data, function(index, item) {
+            	    $(".category").append('<option value="'+ item.id +'">'+ item.title +'</option>');
+            	    $(".edit-category").append('<option value="'+ item.id +'">'+ item.title +'</option>');
+            });
+            
+            // 显示当前分类
+            if (window.location.search) {
+                var param = window.location.search.split('?')[1].split('=');
+                var paramKey = param[0];
+                var paramValue = param[1];
+                console.log(paramKey + ':' + paramValue)
+                if (paramKey == 'category') {
+                    console.log('4808305283402834')
+                    $("#getSortData").find('option').each(function() {
+                        if ($(this).attr('value') == paramValue) {
+                            $(this).attr('selected',true);
+                        } else {
+                            $(this).attr('selected',false);
+                        }
+                    });
+                }
+            }
+            
+        });
+        
+        // 添加收藏
         $("#submitData").on('click', function() {
             var data = $("#formData").serializeArray();
             $.post('/api/favorite/add', data, function (res) {
-                console.log(res)
+//              console.log(res)
                 if (res.status === 1) {
                     $('#myModal').modal('hide');
                     window.location.reload();
@@ -190,6 +273,7 @@
             }, 'json');
         });
         
+        // 删除收藏
         $(".delete").on('click', function (e) {
             e.stopPropagation();
             var $this = $(this);
@@ -223,18 +307,29 @@
             
         });
         
+        // 编辑收藏弹框显示时的回调
         $('#editDialog').on('show.bs.modal', function (e) {
             var title = $(e.relatedTarget).attr('item-title'),
                 link = $(e.relatedTarget).attr('item-link'),
-                intro = $(e.relatedTarget).attr('item-intro');
+                intro = $(e.relatedTarget).attr('item-intro'),
+                categoryId = $(e.relatedTarget).attr('item-cgyid'),
                 id = $(e.relatedTarget).attr('item-id');
             
+            $(this).find('option').each(function () {
+                if (categoryId == $(this).attr('value')) {
+                    $(this).attr('selected',true);
+                } else {
+                    $(this).attr('selected',false);
+                }
+                
+            });
             $(this).find('[name=title]').val(title);
             $(this).find('[name=link]').val(link);
             $(this).find('[name=intro]').val(intro);
             $(this).find('[name=id]').val(id);
         });
         
+        // 编辑收藏
         $("#submitEdit").on('click', function (e) {
             e.stopPropagation();
             var editFormData = $("#editFormData").serializeArray();
@@ -258,6 +353,80 @@
                 }
             }, 'json');
         });
+        
+        // 新增分类
+        $("#addCategory").on('click', function () {
+            var value = $(".add-category").val().trim();
+            $.post('/api/favorite/category/add', {title: value}, function (res) {
+                
+                if (res.status === 1) {
+                    layer.open({
+                        style: 'max-width: 300px',
+                        content: res.info,
+                        time: 2.5,
+                        end: function () {
+                            location.reload();
+                        }
+                    });
+                } else if (res.status === 2) {
+                    layer.open({
+                        style: 'max-width: 300px',
+                        content: res.info,
+                        time: 2.5,
+                        end: function () {
+                            location.href = "/login.html";
+                        }
+                    });
+                } else {
+                    layer.open({
+                        style: 'max-width: 300px',
+                        content: res.info,
+                        time: 2.5,
+                    });
+                }
+            });
+        });
+        
+        // 删除分类
+        $("#deleteCategory").on('click', function () {
+            var value = $(".delete-category").val();
+            console.log(typeof value);
+            $.post('/api/favorite/category/delete', {id: value}, function (res) {
+                
+                if (res.status === 1) {
+                    layer.open({
+                        style: 'max-width: 300px',
+                        content: res.info,
+                        time: 2.5,
+                        end: function () {
+                            location.reload();
+                        }
+                    });
+                } else if (res.status === 2) {
+                    layer.open({
+                        style: 'max-width: 300px',
+                        content: res.info,
+                        time: 2.5,
+                        end: function () {
+                            location.href = "/login.html";
+                        }
+                    });
+                } else {
+                    layer.open({
+                        style: 'max-width: 300px',
+                        content: res.info,
+                        time: 2.5,
+                    });
+                }
+            });
+        });
+        
+        // 按分类获取数据
+        $("#getSortData").change(function() {
+            console.log($(this).val());
+            location.href = "/favorite.html?category=" +  $(this).val();
+        });
+        
     });
 </script>
 {% endblock %}
