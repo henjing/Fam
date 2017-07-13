@@ -38,7 +38,7 @@ if (isProduction === false) {
 app.use(cookieParser());
 app.use(cookieSession({
     name: 'session',
-    keys: ['famfamenjing'],
+    keys: ['suipianny article'],
     maxAge: 30 * 60 * 1000
 }));
 

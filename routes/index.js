@@ -5,6 +5,7 @@ const Favorite = require('../controllers/favoriteController');
 const router = (app) => {
     app.get('/', Index.index);
     app.get('/index.html', Index.index);
+    app.get('/trace.html', Index.traceData);
     
     app.get('/login.html', Users.index);
     app.post('/api/login', Users.login);

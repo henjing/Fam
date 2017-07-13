@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>基地实时数据</title>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="/public/css/bootstrap.min.css">
+<link rel="stylesheet" href="/public/css/base.css"/>
+<style>
+    .trace-container {
+        width: 100%;
+        max-width: 480px;
+        min-width: 320px;
+        margin:  0 auto;
+    }
+    .top-tip {
+        width: 100%;
+        padding: 5px 10px;
+        font-size: 12px;
+        line-height: 18px;
+        color: #fff;
+        background: #e6c23d;
+        background: #FFCC00;
+    }
+    .area-item {
+        margin-top: 20px;
+    }
+    .area-title {
+        display: block;
+        width: 70px;
+        height: 27px;
+        line-height: 27px;
+        font-size: 14px;
+        text-align: center;
+        color: #fff;
+        background-color: #16BF5E;
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+    }
+    .area-item-list {
+        margin-top: 20px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .area-item-list>li {
+        position: relative;
+        padding-top: 24px;
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+        border: 1px solid #E1DFDF;
+        border-radius: 5px;
+    }
+    .area-item-list>li .item-header {
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        margin-left: -75px;
+        width: 150px;
+        height: 24px;
+        line-height: 24px;
+        font-size: 12px;
+        text-align: center;
+        color: #F58006;
+        background: #C8F6E2;
+        border-radius: 20px;
+    }
+    .area-item-list>li .content:nth-child(2n) {
+        background-color: #f9f9f9;
+    }
+    .area-item-list>li .content p {
+        width: 50%;
+        margin-bottom: 0;
+        line-height: 24px;
+        font-size: 14px;
+        text-align: center;
+    }
+    
+    .area-item-list>li .content p.left {
+        color: #777;
+    }
+    .area-item-list>li .content p.right {
+        color: #333;
+    }
+    .bottom-tip {
+        display: -webkit-box;
+        -webkit-box-align: center;
+        margin-bottom: 20px;
+    }
+    .bottom-tip p {
+        padding: 0 10px;
+        margin-bottom: 0;
+        font-size: 14px;
+        line-height: 20px;
+        color: #bdbcbc;
+    }
+    .bottom-tip:before,
+    .bottom-tip:after {
+        display: block;
+        content: '';
+        height: 1px;
+        width: 100%;
+        background: #E1DFDF;
+        -webkit-box-flex: 1;
+    }
+</style>
+{% endblock %}
+{% block body %}
+    <div class="trace-container">
+        <div class="top-tip">
+            该数据由基地数据采集设备实时传回，数据真实有效！
+        </div>
+        {% for index, area in data %}
+        <div class="area-item">
+            <span class="area-title">{{index}}区</span>
+            <ul class="area-item-list">
+                {% for item in area %}
+                <li>
+                    <div class="item-header">终端：{{ item['终端'] }}</div>
+                    <div class="content clearfix">
+                        <p class="left pull-left">光照强度</p>
+                        <p class="right pull-left">{{ item['[光照强度]'] }}lux</p>
+                    </div>
+                    <div class="content clearfix">
+                        <p class="left pull-left">土壤温度</p>
+                        <p class="right pull-left">{{ item['[土壤温度]'] }}℃</p>
+                    </div>
+                    <div class="content clearfix">
+                        <p class="left pull-left">土壤湿度</p>
+                        <p class="right pull-left">{{ item['[土壤湿度]'] }}%</p>
+                    </div>
+                    <div class="content clearfix">
+                        <p class="left pull-left">空气温度</p>
+                        <p class="right pull-left">{{ item['[空气温度]'] }}℃</p>
+                    </div>
+                    <div class="content clearfix">
+                        <p class="left pull-left">空气湿度</p>
+                        <p class="right pull-left">{{ item['[空气湿度]'] }}%</p>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+        <div class="bottom-tip">
+            <p>我是有底线的</p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block selfjs %}
+<script>
+   
+</script>
+{% endblock %}
+
